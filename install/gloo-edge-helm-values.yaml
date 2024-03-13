@@ -1,0 +1,26 @@
+gloo:
+  settings:
+    disableKubernetesDestinations: true
+    invalidConfigPolicy:
+      replaceInvalidRoutes: true
+      invalidRouteResponseBody: "ddoyle invalid route response."
+      invalidRouteResponseCode: 404
+  discovery:
+    enabled: true
+  gateway:
+    # Configure Validating Admission Webhook to reject resources (normally invalid resources are only logged).
+    validation:
+      enabled: true
+      # Reject invalid resources (resources that would result in an error state)
+      alwaysAcceptResources: false
+      # Reject resources that would result in a warning
+      allowWarnings: false
+      # allowWarnings: true
+  gatewayProxies:
+    gatewayProxy:
+      gatewaySettings:
+        accessLoggingService:
+          accessLog:
+          - fileSink:
+              path: /dev/stdout
+              stringFormat: ""
