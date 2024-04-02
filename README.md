@@ -88,7 +88,7 @@ By configuring the validation webhook to reject updates that would result in Glo
 
 The issue here is that it is expected that, because the "Replace Invalid Route" options is enabled, the Upstream should just be automatically deleted.
 
-> NOTE
+> [!NOTE]
 > There is a setting in Gloo Edge that allows you to bypass/skip the validation webhook when you delete certain resources: `gloo.gateway.validation.webhook.skipDeleteValidationResources`. This allows you to configure that when an `Upstream` is deleted, the webhook should be skipped.
 > ```
 > gloo:
