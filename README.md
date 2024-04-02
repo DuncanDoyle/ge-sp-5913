@@ -93,7 +93,7 @@ The issue here is that it is expected that, because the "Replace Invalid Route" 
 > ```
 > gloo:
 >   gateway:
->    # Configure Validating Admission Webhook to reject resources (normally invalid resources are only logged).
+>     # Configure Validating Admission Webhook to reject resources (normally invalid resources are only logged).
 >     validation:
 >       enabled: true
 >       # Reject invalid resources (resources that would result in an error state)
