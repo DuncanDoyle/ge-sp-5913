@@ -87,3 +87,21 @@ kubectl -n gloo-system delete vs vs
 By configuring the validation webhook to reject updates that would result in Gloo resources going into a "Warning" state (i.e. `gloo.gateway.validation.alwaysAcceptResources: false` and `gloo.gateway.validation.allowWarnings: false`), the automatic deletion of the `Upstream` by the discovery service is rejected, as there is still a `VirtualService` referencing the `Upstream`. After deleting the given `VirtualService`, the `Upstream` will be automatically deleted on the next discovery run.
 
 The issue here is that it is expected that, because the "Replace Invalid Route" options is enabled, the Upstream should just be automatically deleted.
+
+> NOTE
+> There is a setting in Gloo Edge that allows you to bypass/skip the validation webhook when you delete certain resources: `gloo.gateway.validation.webhook.skipDeleteValidationResources`. This allows you to configure that when an `Upstream` is deleted, the webhook should be skipped.
+> ```
+> gloo:
+>   gateway:
+>    # Configure Validating Admission Webhook to reject resources (normally invalid resources are only logged).
+>     validation:
+>       enabled: true
+>       # Reject invalid resources (resources that would result in an error state)
+>       alwaysAcceptResources: false
+>       # Reject resources that would result in a warning
+>       allowWarnings: false
+>       # Disable validation webhook when deleting the following resources.
+>       webhook:
+>         skipDeleteValidationResources:
+>         - upstreams
+> ```

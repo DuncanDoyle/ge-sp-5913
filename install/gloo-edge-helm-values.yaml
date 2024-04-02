@@ -16,6 +16,10 @@ gloo:
       # Reject resources that would result in a warning
       allowWarnings: false
       # allowWarnings: true
+      # Disable validation webhook when deleting the following resources.
+      # webhook:
+      #   skipDeleteValidationResources:
+      #   - upstreams  
   gatewayProxies:
     gatewayProxy:
       gatewaySettings:
