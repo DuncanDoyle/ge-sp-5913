@@ -123,8 +123,8 @@ The issue here is that it is expected that, because the "Replace Invalid Route" 
 > * try to delete `developer-example-com-vs` and `api-example-com-vs` at the same time, you can't because deletion of multiple resources is not an atomic operation in K8S ...
 > 
 > The only solution out of this is to:
-> * Manually create the missing Upstreams to get the system out of Warning state
-> * Configure the webhook to also not run on deletion of virtualservices.
+> * Manually create the missing Upstreams to get the system out of Warning state. Note that I've not tried this and I'm also not sure if this is actually possible and the `Upstreams` will not get rejected by the validating webhook.
+> * Configure the webhook to also not run on deletion of `VirtualServices` or creation of `Upstreams`.
 >
 > When I try to apply the latter with a Helm upgrade, I can't because the pre-upgrade hook fails because of the fact that the system is in a "Warning" state on the `VirtualServices`. So you need to configure this setting directly on the `ValidatingWebhookConfiguration` CR (i.e. remove the `DELETE` operation on the `Virtualservices` configuration in the `rules` section of the CR). 
 >
