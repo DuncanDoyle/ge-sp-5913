@@ -107,10 +107,10 @@ The issue here is that it is expected that, because the "Replace Invalid Route" 
 > ```
 
 > [!NOTE]
-> With the `skipDeleteValidationResources` configuration set to skip validation when deleting Upstreams, you can end up in an interesting scenario.
+> With the `skipDeleteValidationResources` configuration set to skip validation when deleting `Upstreams`, you can end up in an interesting scenario.
 >
 > With this setting enabled, execute the following steps:
-> 1. Deploy the second httpbin service: `kubectl apply -f apis/httpbin2.yaml
+> 1. Deploy the second httpbin service: `kubectl apply -f apis/httpbin2.yaml`
 > 1. Deploy the `developer-example-com-vs.yaml` `VirtualService`: `kubectl apply -f apis/developer-example-com-vs.yaml`
 > 1. Remove the `httpbin` and `httpbin2` APIs: `kubectl delete -f apis/httpbin.yaml,apis/httpbin2.yaml`
 > 
