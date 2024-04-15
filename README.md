@@ -80,7 +80,7 @@ The problem in this specific case is that, because we've configured the "replace
 When you now delete the `VirtualService` that is referencing the `httpbin-httpbin-8000` `Upstream`, the `Upstream` will eventually be removed (after the discovery cycle runs):
 
 ```
-kubectl -n gloo-system delete vs vs
+kubectl -n gloo-system delete vs api-example-com-vs
 ```
 
 ## Conclusion
@@ -105,3 +105,27 @@ The issue here is that it is expected that, because the "Replace Invalid Route" 
 >         skipDeleteValidationResources:
 >         - upstreams
 > ```
+
+> [!NOTE]
+> With the `skipDeleteValidationResources` configuration set to skip validation when deleting Upstreams, you can end up in an interesting scenario.
+>
+> With this setting enabled, execute the following steps:
+> 1. Deploy the second httpbin service: `kubectl apply -f apis/httpbin2.yaml
+> 1. Deploy the `developer-example-com-vs.yaml` `VirtualService`: `kubectl apply -f apis/developer-example-com-vs.yaml`
+> 1. Remove the `httpbin` and `httpbin2` APIs: `kubectl delete -f apis/httpbin.yaml,apis/httpbin2.yaml`
+> 
+> You will now be in a situation where you have 2 `VirtualServices` `api-example-com-vs` and `developer-example-com-vs` that are both in `Warning` state.
+>
+> When you:
+> * try to re-deploy the `httpbin` and `httpbin2` services, their Upstreams are not created, because the 2 `VirtualServices` are in warning state.
+> * try to delete `api-example-com-vs`, you can't because `developer-example-com-vs` is still in a warning state. 
+> * try to delete `developer-example-com-vs`, you can't because `api-example-com-vs` is still in a warning state.
+> * try to delete `developer-example-com-vs` and `api-example-com-vs` at the same time, you can't because deletion of multiple resources is not an atomic operation in K8S ...
+> 
+> The only solution out of this is to:
+> * Manually create the missing Upstreams to get the system out of Warning state
+> * Configure the webhook to also not run on deletion of virtualservices.
+>
+> When I try to apply the latter with a Helm upgrade, I can't because the pre-upgrade hook fails because of the fact that the system is in a "Warning" state on the `VirtualServices`. So you need to configure this setting directly on the `ValidatingWebhookConfiguration` CR (i.e. remove the `DELETE` operation on the `Virtualservices` configuration in the `rules` section of the CR). 
+>
+> When you now delete the virtualservices that are in a "Warning" state, the `Upstreams` for the redeployed `httpbin` and `httpbin2` services will be created on the next discover run. After this you can re-apply the `VirtualService` to get the system back into a working state.
