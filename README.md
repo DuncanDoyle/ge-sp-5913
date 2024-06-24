@@ -111,7 +111,7 @@ The issue here is that it is expected that, because the "Replace Invalid Route" 
 >
 > With this setting enabled, execute the following steps:
 > 1. Deploy the second httpbin service: `kubectl apply -f apis/httpbin2.yaml`
-> 1. Deploy the `developer-example-com-vs.yaml` `VirtualService`: `kubectl apply -f apis/developer-example-com-vs.yaml`
+> 1. Deploy the `developer-example-com-vs.yaml` `VirtualService`: `kubectl apply -f virtualservices/developer-example-com-vs.yaml`
 > 1. Remove the `httpbin` and `httpbin2` APIs: `kubectl delete -f apis/httpbin.yaml,apis/httpbin2.yaml`
 > 
 > You will now be in a situation where you have 2 `VirtualServices` `api-example-com-vs` and `developer-example-com-vs` that are both in "Warning" state.
